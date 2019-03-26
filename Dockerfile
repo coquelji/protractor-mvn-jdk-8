@@ -29,6 +29,21 @@ RUN echo "# Installing Maven " && echo ${MAVEN_VERSION} && \
 
 VOLUME /var/lib/maven
 
+RUN apt-get update && \
+  apt-get install -y \
+    openjdk-8-jre \
+    xvfb \
+    libgconf-2-4 \
+    libexif12 \
+    chromium \
+    npm \
+    supervisor \
+    netcat-traditional \
+    curl \
+    ffmpeg && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
+  
 # Install Protractor
 RUN npm install -g protractor@4.0.4 
 
