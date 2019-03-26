@@ -39,8 +39,6 @@ RUN apt-get update && \
     supervisor \
     netcat-traditional \
     curl \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
   
 # Install Protractor
 RUN npm install -g protractor@4.0.4 
