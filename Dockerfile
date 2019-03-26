@@ -40,7 +40,7 @@ RUN echo "# Installing Nodejs" && \
     apt-get install nodejs build-essential -y && \
     npm set strict-ssl false && \
     npm install -g npm@latest && \
-    npm install -g protractor@4.0.4 
+    npm install -g protractor@4.0.4 \ 
     npm install -g bower grunt grunt-cli && \
     npm cache clear -f && \
     npm install -g n && \
