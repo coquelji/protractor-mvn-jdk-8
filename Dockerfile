@@ -35,12 +35,10 @@ RUN apt-get update && \
     xvfb \
     libgconf-2-4 \
     libexif12 \
-    chromium \
     npm \
     supervisor \
     netcat-traditional \
     curl \
-    ffmpeg && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
   
