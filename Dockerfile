@@ -40,11 +40,10 @@ RUN echo "# Installing Nodejs" && \
     npm install -g bower grunt grunt-cli && \
     npm cache clear -f && \
     npm install -g n && \
-    # Install Protractor
-    npm install -g protractor@4.0.4 \
-    # Install Selenium and Chrome driver
-    webdriver-manager update \
-
     n stable
     
-   
+# Install Protractor
+RUN npm install -g protractor@4.0.4 
+
+# Install Selenium and Chrome driver
+RUN webdriver-manager update
