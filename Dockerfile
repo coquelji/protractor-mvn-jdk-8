@@ -1,27 +1,50 @@
-FROM openjdk:8-jdk-slim
+FROM ubuntu:14.04
 
-ARG MAVEN_VERSION=3.6.0
-ARG USER_HOME_DIR="/root"
-ARG SHA=fae9c12b570c3ba18116a4e26ea524b29f7279c17cbaadc3326ca72927368924d9131d11b9e851b8dc9162228b6fdea955446be41207a5cfc61283dd8a561d2f
-ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
+ENV MAVEN_VERSION 3.5.0
 
-RUN apt-get update && \
-    apt-get install -y \
-      curl procps \
-  && rm -rf /var/lib/apt/lists/*
+RUN echo deb http://archive.ubuntu.com/ubuntu precise universe > /etc/apt/sources.list.d/universe.list
+RUN apt-get update && apt-get install -y wget git curl zip monit openssh-server git iptables ca-certificates daemon net-tools libfontconfig-dev
 
-RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
-  && curl -fsSL -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
-  && echo "${SHA}  /tmp/apache-maven.tar.gz" | sha512sum -c - \
-  && tar -xzf /tmp/apache-maven.tar.gz -C /usr/share/maven --strip-components=1 \
-  && rm -f /tmp/apache-maven.tar.gz \
-  && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
+#Install Oracle JDK 8
+#--------------------
+RUN echo "# Installing Oracle JDK 8" && \
+    sudo apt-get install -y software-properties-common debconf-utils && \
+    sudo add-apt-repository -y ppa:webupd8team/java && \
+    sudo apt-get update && \
+    echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections && \
+    sudo apt-get install -y oracle-java8-installer
+# Maven related
+# -------------
+ENV MAVEN_ROOT /var/lib/maven
+ENV MAVEN_HOME $MAVEN_ROOT/apache-maven-$MAVEN_VERSION
+ENV MAVEN_OPTS -Xms256m -Xmx512m
 
-ENV MAVEN_HOME /usr/share/maven
-ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+RUN echo "# Installing Maven " && echo ${MAVEN_VERSION} && \
+    wget --no-verbose -O /tmp/apache-maven-$MAVEN_VERSION.tar.gz \
+    http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
+    mkdir -p $MAVEN_ROOT && \
+    tar xzf /tmp/apache-maven-$MAVEN_VERSION.tar.gz -C $MAVEN_ROOT && \
+    ln -s $MAVEN_HOME/bin/mvn /usr/local/bin && \
+    rm -f /tmp/apache-maven-$MAVEN_VERSION.tar.gz
 
-COPY mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
-COPY settings-docker.xml /usr/share/maven/ref/
+VOLUME /var/lib/maven
 
-ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
-CMD ["mvn"]
+# Node related
+# ------------
+
+RUN echo "# Installing Nodejs" && \
+    curl -sL https://deb.nodesource.com/setup_4.x | bash - && \
+    apt-get install nodejs build-essential -y && \
+    npm set strict-ssl false && \
+    npm install -g npm@latest && \
+    npm install -g bower grunt grunt-cli && \
+    npm cache clear -f && \
+    npm install -g n && \
+    # Install Protractor
+    npm install -g protractor@4.0.4 \
+    # Install Selenium and Chrome driver
+    webdriver-manager update \
+
+    n stable
+    
+   
