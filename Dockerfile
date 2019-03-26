@@ -29,20 +29,6 @@ RUN echo "# Installing Maven " && echo ${MAVEN_VERSION} && \
 
 VOLUME /var/lib/maven
 
-RUN apt-get update && \
-  apt-get install -y \
-    openjdk-8-jre \
-    xvfb \
-    libgconf-2-4 \
-    libexif12 \
-    npm \
-    supervisor \
-    netcat-traditional \
-    curl \
-  
-# Install Protractor
-RUN npm install -g protractor@4.0.4 
-
 # Install Selenium and Chrome driver
 RUN webdriver-manager update
 
@@ -54,6 +40,7 @@ RUN echo "# Installing Nodejs" && \
     apt-get install nodejs build-essential -y && \
     npm set strict-ssl false && \
     npm install -g npm@latest && \
+    npm install -g protractor@4.0.4 
     npm install -g bower grunt grunt-cli && \
     npm cache clear -f && \
     npm install -g n && \
