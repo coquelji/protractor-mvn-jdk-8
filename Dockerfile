@@ -1,4 +1,6 @@
-FROM ubuntu:14.04
+ROM ubuntu:14.04
+
+MAINTAINER James Dunnam "jamesd1184@gmail.com"
 
 ENV MAVEN_VERSION 3.5.0
 
@@ -29,6 +31,12 @@ RUN echo "# Installing Maven " && echo ${MAVEN_VERSION} && \
 
 VOLUME /var/lib/maven
 
+# Install Protractor
+RUN npm install -g protractor@4.0.4 
+
+# Install Selenium and Chrome driver
+RUN webdriver-manager update
+
 # Node related
 # ------------
 
@@ -42,8 +50,4 @@ RUN echo "# Installing Nodejs" && \
     npm install -g n && \
     n stable
     
-# Install Protractor
-RUN npm install -g protractor@4.0.4 
 
-# Install Selenium and Chrome driver
-RUN webdriver-manager update
