@@ -1,6 +1,4 @@
-ROM ubuntu:14.04
-
-MAINTAINER James Dunnam "jamesd1184@gmail.com"
+FROM ubuntu:14.04
 
 ENV MAVEN_VERSION 3.5.0
 
