@@ -29,8 +29,6 @@ RUN echo "# Installing Maven " && echo ${MAVEN_VERSION} && \
 
 VOLUME /var/lib/maven
 
-# Install Selenium and Chrome driver
-RUN webdriver-manager update
 
 # Node related
 # ------------
